@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    private Button b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,10 +20,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
     public void aboutToast(View view){
         Context con = getApplicationContext();
         Toast.makeText(con, "Mariah Maynard \nmaynard.ma@northeastern.edu", Toast.LENGTH_LONG).show();
 
     }
+
+
+
+
+
 
 }

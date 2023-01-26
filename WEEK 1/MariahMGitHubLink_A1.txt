@@ -1,0 +1,3 @@
+name: Mariah Maynard
+GitHub name: mariah-may23
+GitHub repo link: https://github.com/mariah-may23/cs5520_23Sp/tree/a1
