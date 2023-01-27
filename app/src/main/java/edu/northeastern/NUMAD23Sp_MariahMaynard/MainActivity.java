@@ -3,6 +3,7 @@ package edu.northeastern.NUMAD23Sp_MariahMaynard;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +26,11 @@ public class MainActivity extends AppCompatActivity {
         Context con = getApplicationContext();
         Toast.makeText(con, "Mariah Maynard \nmaynard.ma@northeastern.edu", Toast.LENGTH_LONG).show();
 
+    }
+
+    public void openClickyActivity(View view) {
+        Intent i = new Intent(this, ClickyActivity.class);
+        startActivity(i);
     }
 
 
