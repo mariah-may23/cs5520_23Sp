@@ -22,14 +22,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    /*
     public void aboutToast(View view){
         Context con = getApplicationContext();
         Toast.makeText(con, "Mariah Maynard \nmaynard.ma@northeastern.edu", Toast.LENGTH_LONG).show();
 
     }
 
+     */
+
     public void openClickyActivity(View view) {
         Intent i = new Intent(this, ClickyActivity.class);
+        startActivity(i);
+    }
+
+    public void openAboutInfo(View view) {
+        Intent i = new Intent(this, AboutActivity.class);
         startActivity(i);
     }
 

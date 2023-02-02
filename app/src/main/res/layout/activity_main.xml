@@ -27,7 +27,7 @@
         android:layout_marginTop="24dp"
         android:backgroundTint="#0E0710"
         android:fontFamily="sans-serif-black"
-        android:onClick="aboutToast"
+        android:onClick="openAboutInfo"
         android:text="@string/about_me_string"
         android:textColor="#FFCAFD"
         app:layout_constraintEnd_toEndOf="parent"
