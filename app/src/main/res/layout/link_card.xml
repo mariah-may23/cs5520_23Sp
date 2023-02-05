@@ -7,31 +7,31 @@
 
     <RelativeLayout
         android:layout_width="405dp"
-        android:layout_height="65dp"
+        android:layout_height="81dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/linkName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="22dp"
-            android:text="Link Name" />
+            android:layout_marginStart="172dp"
+            android:layout_marginTop="11dp"
+            android:text="@string/linkName" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/linkUrl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="26dp"
-            android:layout_marginEnd="134dp"
-            android:text="URL" />
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="192dp"
+            android:text="@string/linkUrl" />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

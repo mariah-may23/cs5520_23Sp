@@ -1,10 +1,10 @@
 package edu.northeastern.NUMAD23Sp_MariahMaynard;
 
-public class Link {
+public class LinkCard {
     private String linkName;
     private String linkUrl;
 
-    public Link(String linkName, String linkUrl) {
+    public LinkCard(String linkName, String linkUrl) {
         this.linkName = linkName;
         this.linkUrl = linkUrl;
     }

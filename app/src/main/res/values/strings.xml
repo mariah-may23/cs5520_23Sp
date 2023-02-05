@@ -9,4 +9,6 @@
     <string name="e">E</string>
     <string name="f">F</string>
     <string name="mariah_maynard_nmaynard_ma_northeastern_edu">Mariah Maynard \nmaynard.ma@northeastern.edu</string>
+    <string name="linkName">Link Name</string>
+    <string name="linkUrl">URL</string>
 </resources>
