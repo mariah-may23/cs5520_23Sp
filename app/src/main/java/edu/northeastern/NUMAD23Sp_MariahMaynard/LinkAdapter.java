@@ -40,6 +40,7 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {
         // sets the age of the person to the age textview of the viewholder.
         holder.linkUrl.setText(String.valueOf(currentLink.getLinkUrl()));
 
+
     }
 
     @Override
