@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -39,50 +40,55 @@ public class LinkActivity extends AppCompatActivity {
         addLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLinkDialog();
+                showLinkDialog(v);
+
             }
+
         });
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT ) {
+        ItemTouchHelper deleteTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT ) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
-
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 Toast.makeText(LinkActivity.this, "Delete an item", Toast.LENGTH_SHORT).show();
                 int position = viewHolder.getLayoutPosition();
                 linksList.remove(position);
-
                 lAdapter.notifyItemRemoved(position);
+            }
+        });
+        ItemTouchHelper editTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT ) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                Toast.makeText(LinkActivity.this, "Edit an item", Toast.LENGTH_SHORT).show();
+                int position = viewHolder.getLayoutPosition();
+                LinkCard card = linksList.get(position);
+                showLinkDialogEdit(linkRecyclerView,card,position);
+
 
             }
-
-
-
         });
-        itemTouchHelper.attachToRecyclerView(linkRecyclerView);
 
-    }
-
-    public void onTouch(RecyclerView.ViewHolder viewHolder){
-        int pos = viewHolder.getLayoutPosition();
-        LinkCard linky = linksList.get(pos);
-        String url = linky.getLinkUrl();
-
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
-
+        deleteTouchHelper.attachToRecyclerView(linkRecyclerView);
+        editTouchHelper.attachToRecyclerView(linkRecyclerView);
     }
 
 
 
 
-    private void showLinkDialog(){
+
+
+
+    private void showLinkDialog(View v){
         final Dialog dialog = new Dialog(LinkActivity.this);
         // disable default title
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+      //  dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true); // can cancel dialog
         dialog.setContentView(R.layout.link_dialog_box); // layout created to get link
 
@@ -96,13 +102,63 @@ public class LinkActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String name = name_et.getText().toString();
                 String url = url_et.getText().toString();
-                addItem(name,url);
-                dialog.dismiss();
+                if(name.length()==0 || url.length() == 0){
+                    dialog.dismiss();
+                    Snackbar.make(LinkActivity.this,v,"Link not created! Please enter valid criteria.",Snackbar.LENGTH_LONG).show();
+
+                }     else{
+                    addItem(name,url);
+                    dialog.dismiss();
+                    Snackbar.make(LinkActivity.this,v,"Link successfully created!",Snackbar.LENGTH_LONG).show();
+                }
+
+
+
             }
         });
         dialog.show();
 
     }
+
+    private void showLinkDialogEdit(View v,LinkCard card, int pos){
+        final Dialog dialog = new Dialog(LinkActivity.this);
+        // disable default title
+        //  dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true); // can cancel dialog
+        dialog.setContentView(R.layout.link_dialog_box); // layout created to get link
+
+        //INITIALIZE VIEWS
+        final EditText name_et = dialog.findViewById(R.id.linkName_et);
+        final EditText url_et = dialog.findViewById(R.id.linkUrl_et);
+        Button submit = dialog.findViewById(R.id.submit_button);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = name_et.getText().toString();
+                String url = url_et.getText().toString();
+                if(name.length()==0 || url.length() == 0){
+                    dialog.dismiss();
+                    Snackbar.make(LinkActivity.this,v,"Link not edited! Please enter valid criteria.",Snackbar.LENGTH_LONG).show();
+
+                }     else{
+                    card.setLinkName(name);
+                    card.setLinkUrl(url);
+                    lAdapter.notifyItemChanged(pos);
+
+                    dialog.dismiss();
+                    Snackbar.make(LinkActivity.this,v,"Link successfully edited!",Snackbar.LENGTH_LONG).show();
+                }
+
+
+
+            }
+        });
+        dialog.show();
+
+    }
+
+
 
     private void createRecyclerView() {
 
@@ -128,34 +184,17 @@ public class LinkActivity extends AppCompatActivity {
 
             }
         };
-
-
         lAdapter.setOnItemClickListener(itemClickListener);
         linkRecyclerView.setAdapter(lAdapter);
         linkRecyclerView.setLayoutManager(layoutManager);
 
-
-
     }
 
     private void addItem(String name, String url) {
+
         linksList.add(0, new LinkCard(name, url));
-        Toast.makeText(LinkActivity.this, "Add an item", Toast.LENGTH_SHORT).show();
 
         lAdapter.notifyItemInserted(0);
-    }
-
-    private void goToWeb(View v) {
-        TextView txt = findViewById(v.getId());
-        txt.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse((String) txt.getText()));
-                startActivity(intent);
-            }
-
-        });
     }
 
 

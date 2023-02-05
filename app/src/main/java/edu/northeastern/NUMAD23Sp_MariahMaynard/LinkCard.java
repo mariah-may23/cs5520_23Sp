@@ -7,6 +7,8 @@ public class LinkCard{
     private String linkUrl;
 
 
+
+
     public LinkCard(String linkName, String linkUrl) {
         this.linkName = linkName;
         this.linkUrl = linkUrl;
@@ -21,6 +23,13 @@ public class LinkCard{
     }
 
 
+    public void setLinkName(String linkName) {
+        this.linkName = linkName;
+    }
+
+    public void setLinkUrl(String linkUrl) {
+        this.linkUrl = linkUrl;
+    }
 
 
 

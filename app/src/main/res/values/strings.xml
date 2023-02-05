@@ -16,4 +16,5 @@
     <string name="url">URL:</string>
     <string name="link_name">Link Name:</string>
     <string name="add_a_link_below">Add a link below!</string>
+    <string name="edit">edit</string>
 </resources>
