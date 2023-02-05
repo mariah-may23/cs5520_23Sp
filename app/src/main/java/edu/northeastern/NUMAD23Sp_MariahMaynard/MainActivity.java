@@ -41,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void openLinkActivity(View view) {
+        Intent i = new Intent(this, LinkActivity.class);
+        startActivity(i);
+    }
+
+
 
 
 
