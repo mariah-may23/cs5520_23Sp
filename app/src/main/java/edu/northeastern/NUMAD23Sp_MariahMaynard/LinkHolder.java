@@ -25,6 +25,7 @@ public class LinkHolder extends RecyclerView.ViewHolder{
                         listener.onItemClick(position);
                     }
                 }
+
             }
         });
     }

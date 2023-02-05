@@ -4,15 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class LinkActivity extends AppCompatActivity {
     private RecyclerView linkRecyclerView;
@@ -32,10 +37,35 @@ public class LinkActivity extends AppCompatActivity {
         addLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int pos = 0;
-                addItem(pos);
+                showLinkDialog();
             }
         });
+
+
+    }
+
+    private void showLinkDialog(){
+        final Dialog dialog = new Dialog(LinkActivity.this);
+        // disable default title
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true); // can cancel dialog
+        dialog.setContentView(R.layout.link_dialog_box); // layout created to get link
+
+        //INITIALIZE VIEWS
+        final EditText name_et = dialog.findViewById(R.id.linkName_et);
+        final EditText url_et = dialog.findViewById(R.id.linkUrl_et);
+        Button submit = dialog.findViewById(R.id.submit_button);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = name_et.getText().toString();
+                String url = url_et.getText().toString();
+                addItem(name,url);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
 
     }
 
@@ -55,6 +85,9 @@ public class LinkActivity extends AppCompatActivity {
                 linksList.get(position).onItemClick(position);
 
                 lAdapter.notifyItemChanged(position);
+
+
+
             }
         };
 
@@ -65,11 +98,24 @@ public class LinkActivity extends AppCompatActivity {
 
     }
 
-    private void addItem(int position) {
-        linksList.add(position, new LinkCard("Youtube", "www.youtube.com", false));
+    private void addItem(String name, String url) {
+        linksList.add(0, new LinkCard(name, url, false));
         Toast.makeText(LinkActivity.this, "Add an item", Toast.LENGTH_SHORT).show();
 
-        lAdapter.notifyItemInserted(position);
+        lAdapter.notifyItemInserted(0);
+    }
+
+    private void goToWeb(View v) {
+        TextView txt = findViewById(v.getId());
+        txt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse((String) txt.getText()));
+                startActivity(intent);
+            }
+
+        });
     }
 
 

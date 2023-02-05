@@ -29,4 +29,6 @@ public class LinkCard implements ItemClickListener{
         isChecked = !isChecked;
     }
 
+
+
 }

@@ -1,16 +1,16 @@
 package edu.northeastern.NUMAD23Sp_MariahMaynard;
 
-import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {
 
@@ -46,4 +46,6 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {
     public int getItemCount() {
         return linksList.size();
     }
+
+
 }

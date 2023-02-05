@@ -12,4 +12,8 @@
     <string name="linkName">Link Name</string>
     <string name="linkUrl">URL</string>
     <string name="add_link">add link</string>
+    <string name="submit">Submit</string>
+    <string name="url">URL:</string>
+    <string name="link_name">Link Name:</string>
+    <string name="add_a_link_below">Add a link below!</string>
 </resources>
