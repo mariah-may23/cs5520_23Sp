@@ -2,48 +2,48 @@ package edu.northeastern.NUMAD23Sp_MariahMaynard;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {
 
-    private final List<LinkCard> links;
-    private final Context context;
+    private final ArrayList<LinkCard> linksList;
+    private ItemClickListener listener;
 
-    public LinkAdapter(List<LinkCard> links, Context context) {
-        this.links = links;
-        this.context = context;
+    public LinkAdapter(ArrayList<LinkCard> linksList) {
+        this.linksList = linksList;
+    }
+
+    public void setOnItemClickListener(ItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public LinkHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new LinkHolder(LayoutInflater.from(context).inflate(R.layout.link_card, null));
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.link_card, parent, false);
+        return new LinkHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull LinkHolder holder, int position) {
+        LinkCard currentLink = linksList.get(position);
         // sets the name of the person to the name textview of the viewholder.
-        holder.linkName.setText(links.get(position).getLinkName());
+        holder.linkName.setText(currentLink.getLinkName());
         // sets the age of the person to the age textview of the viewholder.
-        holder.linkUrl.setText(String.valueOf(links.get(position).getLinkUrl()));
-
-        // set a click event on the whole itemView (every element of the recyclerview).
-        holder.itemView.setOnClickListener(view -> {
-            Toast.makeText(context, links.get(position).getLinkName(), Toast.LENGTH_SHORT).show();
-        });
-
+        holder.linkUrl.setText(String.valueOf(currentLink.getLinkUrl()));
 
     }
 
     @Override
     public int getItemCount() {
-        return links.size();
+        return linksList.size();
     }
 }

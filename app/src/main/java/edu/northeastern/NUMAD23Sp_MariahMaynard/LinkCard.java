@@ -1,31 +1,32 @@
 package edu.northeastern.NUMAD23Sp_MariahMaynard;
 
-public class LinkCard {
+import android.widget.AdapterView;
+
+public class LinkCard implements ItemClickListener{
     private String linkName;
     private String linkUrl;
+    private boolean isChecked;
 
-    public LinkCard(String linkName, String linkUrl) {
+    public LinkCard(String linkName, String linkUrl,boolean isChecked) {
         this.linkName = linkName;
         this.linkUrl = linkUrl;
+        this.isChecked = isChecked;
     }
 
     public String getLinkName() {
         return linkName;
     }
-
-    public void setLinkName(String linkName) {
-        this.linkName = linkName;
-    }
-
     public String getLinkUrl() {
         return linkUrl;
     }
-
-    public void setLinkUrl(String linkUrl) {
-        this.linkUrl = linkUrl;
+    public boolean getStatus() {
+        return isChecked;
     }
 
 
-
+    @Override
+    public void onItemClick(int position) {
+        isChecked = !isChecked;
+    }
 
 }
