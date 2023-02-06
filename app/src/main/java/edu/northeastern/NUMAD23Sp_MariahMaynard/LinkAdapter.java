@@ -25,9 +25,6 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {
         this.listener = listener;
     }
 
-    public void setLinksList(ArrayList<LinkCard> linksList){
-
-    }
 
     @NonNull
     @Override
@@ -39,9 +36,9 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {
     @Override
     public void onBindViewHolder(@NonNull LinkHolder holder, int position) {
         LinkCard currentLink = linksList.get(position);
-        // sets the name of the person to the name textview of the viewholder.
+        // sets the name of the link
         holder.linkName.setText(currentLink.getLinkName());
-        // sets the age of the person to the age textview of the viewholder.
+        // sets the link of the url
         holder.linkUrl.setText(String.valueOf(currentLink.getLinkUrl()));
 
 

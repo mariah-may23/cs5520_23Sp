@@ -22,7 +22,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LinkActivity extends AppCompatActivity {
     private RecyclerView linkRecyclerView;
@@ -116,41 +118,31 @@ public class LinkActivity extends AppCompatActivity {
 
     private void initialItemData(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.containsKey("links_urls")) {
-            linksList.clear();
-            names =  savedInstanceState.getStringArrayList("links_names");
-            urls =  savedInstanceState.getStringArrayList("links_urls");
-            System.out.println("HEREEEEEEEE");
-            for(int i = 0; i < names.size(); i++){
-                String name = names.get(i);
-                String url = urls.get(i);
-                LinkCard l = new LinkCard(name,url);
-                System.out.println("ADDING");
-                linksList.add(l);
-               // addItem(names.get(i),urls.get(i));
+            if (linksList == null || linksList.size() == 0) {
+                linksList.clear();
+                names = savedInstanceState.getStringArrayList("links_names");
+                urls = savedInstanceState.getStringArrayList("links_urls");
+                System.out.println("HEREEEEEEEE");
+                for (int i = 0; i < names.size(); i++) {
+                    String name = names.get(i);
+                    String url = urls.get(i);
+                    LinkCard l = new LinkCard(name, url);
+                    System.out.println("ADDING");
+                    linksList.add(l);
+                    // addItem(names.get(i),urls.get(i));
+                }
             }
-            names.clear();
-            urls.clear();
+            List<LinkCard> listWithoutDuplicates = linksList.stream().distinct().collect(Collectors.toList());
+            linksList = (ArrayList<LinkCard>) listWithoutDuplicates;
 
-           // System.out.println(savedInstanceState.get("links_data"));
-
-           // ArrayList list = savedInstanceState.get("links_data");
-
-           // lAdapter.setLinksList((ArrayList<LinkCard>) savedInstanceState.getSerializable("links_data"));
-
-//             linksList.addAll((ArrayList<LinkCard>) savedInstanceState.get("links_data"));
-
-            //lAdapter.setState(savedInstanceState.getSerializable("d.list.data"));
         }
     }
 
 
 
-
-
     private void showLinkDialog(View v){
         final Dialog dialog = new Dialog(LinkActivity.this);
-        // disable default title
-      //  dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         dialog.setCancelable(true); // can cancel dialog
         dialog.setContentView(R.layout.link_dialog_box); // layout created to get link
 
@@ -184,8 +176,6 @@ public class LinkActivity extends AppCompatActivity {
 
     private void showLinkDialogEdit(View v,LinkCard card, int pos){
         final Dialog dialog = new Dialog(LinkActivity.this);
-        // disable default title
-        //  dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true); // can cancel dialog
         dialog.setContentView(R.layout.link_dialog_box); // layout created to get link
 
@@ -224,7 +214,6 @@ public class LinkActivity extends AppCompatActivity {
 
     private void createRecyclerView() {
 
-        System.out.println("***********************NULLLLLLLL**********");
         layoutManager = new LinearLayoutManager(this);
         linkRecyclerView = findViewById(R.id.link_recycler_view);
         linkRecyclerView.setHasFixedSize(true);

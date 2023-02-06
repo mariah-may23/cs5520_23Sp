@@ -10,13 +10,13 @@ public class LinkHolder extends RecyclerView.ViewHolder{
 
     public TextView linkName;
     public TextView linkUrl;
-    public View checkBox;
+
 
     public LinkHolder(@NonNull View itemView, final ItemClickListener listener) {
         super(itemView);
         this.linkName = itemView.findViewById(R.id.linkName);
         this.linkUrl = itemView.findViewById(R.id.linkUrl);
-        this.checkBox = itemView.findViewById(R.id.linkUrl);
+
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
