@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LinkActivity extends AppCompatActivity {
     private RecyclerView linkRecyclerView;
@@ -32,6 +33,8 @@ public class LinkActivity extends AppCompatActivity {
     private Parcelable recyclerViewState;
     private static String LIST_STATE = "list_state";
     private static String BUNDLE_RECYCLER_LAYOUT = "recycler_layout";
+    ArrayList<String> urls = new ArrayList<>();
+    ArrayList<String> names = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +92,20 @@ public class LinkActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+
+        for(LinkCard s: linksList){
+            names.add(s.getLinkName());
+        }
+
+
+        for(LinkCard s: linksList){
+            urls.add(s.getLinkUrl());
+        }
+
         super.onSaveInstanceState(outState);
-        outState.putSerializable("links_data",linksList);
+        outState.putStringArrayList("links_names",names);
+        outState.putStringArrayList("links_urls",urls);
     }
 
     private void init(Bundle savedInstanceState) {
@@ -100,11 +115,31 @@ public class LinkActivity extends AppCompatActivity {
     }
 
     private void initialItemData(Bundle savedInstanceState) {
-        if (savedInstanceState != null && savedInstanceState.containsKey("links_data")) {
+        if (savedInstanceState != null && savedInstanceState.containsKey("links_urls")) {
+            linksList.clear();
+            names =  savedInstanceState.getStringArrayList("links_names");
+            urls =  savedInstanceState.getStringArrayList("links_urls");
             System.out.println("HEREEEEEEEE");
-            System.out.println(savedInstanceState.get("links_data"));
-            linksList.addAll((ArrayList<LinkCard>) savedInstanceState.get("links_data"));
+            for(int i = 0; i < names.size(); i++){
+                String name = names.get(i);
+                String url = urls.get(i);
+                LinkCard l = new LinkCard(name,url);
+                System.out.println("ADDING");
+                linksList.add(l);
+               // addItem(names.get(i),urls.get(i));
+            }
+            names.clear();
+            urls.clear();
 
+           // System.out.println(savedInstanceState.get("links_data"));
+
+           // ArrayList list = savedInstanceState.get("links_data");
+
+           // lAdapter.setLinksList((ArrayList<LinkCard>) savedInstanceState.getSerializable("links_data"));
+
+//             linksList.addAll((ArrayList<LinkCard>) savedInstanceState.get("links_data"));
+
+            //lAdapter.setState(savedInstanceState.getSerializable("d.list.data"));
         }
     }
 
