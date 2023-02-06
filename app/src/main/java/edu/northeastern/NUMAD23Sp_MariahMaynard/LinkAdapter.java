@@ -25,6 +25,10 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {
         this.listener = listener;
     }
 
+    public void setLinksList(ArrayList<LinkCard> linksList){
+
+    }
+
     @NonNull
     @Override
     public LinkHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

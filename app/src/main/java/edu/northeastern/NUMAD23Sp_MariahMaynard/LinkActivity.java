@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -28,13 +29,17 @@ public class LinkActivity extends AppCompatActivity {
     private ArrayList<LinkCard> linksList = new ArrayList<>();
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton addLinkButton;
+    private Parcelable recyclerViewState;
+    private static String LIST_STATE = "list_state";
+    private static String BUNDLE_RECYCLER_LAYOUT = "recycler_layout";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_link);
 
-        createRecyclerView();
+
+        init(savedInstanceState);
 
         addLinkButton = findViewById(R.id.addLinkButton);
         addLinkButton.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +48,7 @@ public class LinkActivity extends AppCompatActivity {
                 showLinkDialog(v);
 
             }
+
 
         });
 
@@ -80,6 +86,27 @@ public class LinkActivity extends AppCompatActivity {
     }
 
 
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("links_data",linksList);
+    }
+
+    private void init(Bundle savedInstanceState) {
+
+        initialItemData(savedInstanceState);
+        createRecyclerView();
+    }
+
+    private void initialItemData(Bundle savedInstanceState) {
+        if (savedInstanceState != null && savedInstanceState.containsKey("links_data")) {
+            System.out.println("HEREEEEEEEE");
+            System.out.println(savedInstanceState.get("links_data"));
+            linksList.addAll((ArrayList<LinkCard>) savedInstanceState.get("links_data"));
+
+        }
+    }
 
 
 
@@ -162,12 +189,13 @@ public class LinkActivity extends AppCompatActivity {
 
     private void createRecyclerView() {
 
+        System.out.println("***********************NULLLLLLLL**********");
         layoutManager = new LinearLayoutManager(this);
-
         linkRecyclerView = findViewById(R.id.link_recycler_view);
         linkRecyclerView.setHasFixedSize(true);
-
         lAdapter = new LinkAdapter(linksList);
+
+
 
         ItemClickListener itemClickListener = new ItemClickListener() {
             @Override
@@ -184,9 +212,17 @@ public class LinkActivity extends AppCompatActivity {
 
             }
         };
+
+
+
+
         lAdapter.setOnItemClickListener(itemClickListener);
         linkRecyclerView.setAdapter(lAdapter);
         linkRecyclerView.setLayoutManager(layoutManager);
+
+
+
+
 
     }
 
