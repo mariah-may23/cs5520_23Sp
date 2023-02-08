@@ -46,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void openPrimeActivity(View view) {
+        Intent i = new Intent(this, PrimeActivity.class);
+        startActivity(i);
+    }
+
 
 
 
