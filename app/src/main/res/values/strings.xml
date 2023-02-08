@@ -17,4 +17,10 @@
     <string name="link_name">Link Name:</string>
     <string name="add_a_link_below">Add a link below!</string>
     <string name="edit">edit</string>
+    <string name="latest_prime">Latest Prime</string>
+    <string name="prime">-</string>
+    <string name="number_being_checked">Number Being Checked: -</string>
+    <string name="terminate_search">Terminate Search</string>
+    <string name="find_primes">Find Primes</string>
+    <string name="pacifier_switch">Pacifier Switch</string>
 </resources>
