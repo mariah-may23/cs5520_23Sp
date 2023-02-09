@@ -69,7 +69,15 @@ public class PrimeActivity extends AppCompatActivity {
             System.out.println("2");
 
             pressed = true;
+            if(terminate) {
+                runnableThread primeThread = new runnableThread();
+                new Thread(primeThread).start();
+                reset = true;
+            }
+
+            terminate = false;
             System.out.println("pressed" + pressed);
+            System.out.println("NOT TERMINATED");
         }
 
 
@@ -116,6 +124,7 @@ public class PrimeActivity extends AppCompatActivity {
                         flag = false;
                         stop = terminate;
                         restart = pressed;
+                        System.out.println("STOP" + stop);
                         System.out.println("RESTRAT" + restart);
                         if (restart) {
                             System.out.println("restart" + restart);
