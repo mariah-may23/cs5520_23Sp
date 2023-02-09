@@ -25,6 +25,8 @@ public class PrimeActivity extends AppCompatActivity {
 
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,19 +57,23 @@ public class PrimeActivity extends AppCompatActivity {
 
 
     public void runFindPrimes(View v) {
-        if(!pressed) {
+        //System.out.println("1");
+        if(!reset) {
+            System.out.println("1");
 
             runnableThread primeThread = new runnableThread();
             new Thread(primeThread).start();
-            pressed = true;
+            reset = true;
         }
         else{
+            System.out.println("2");
+
             pressed = true;
+            System.out.println("pressed" + pressed);
         }
 
 
     }
-
 
 
     class runnableThread implements Runnable {
@@ -81,20 +87,18 @@ public class PrimeActivity extends AppCompatActivity {
         public void run() {
 
             System.out.println("STOP" + stop);
-            int i = 3;
-            while (i <= INFINITY) { //start at 3 and increment forever by adding 2
+
+            while (current_count <= INFINITY) { //start at 3 and increment forever by adding 2
+                System.out.println(pressed);
                 if(stop){
                     break;
                 }
-
-                int finalI = i;
-                current_count = finalI;
+                int finalI = current_count;
+                //current_count = finalI;
                 textHandler.post(new Runnable() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void run() {
-                       // System.out.println("BEFORE");
-
                         current_number.setText("Number Being Checked: " + finalI); // set the current number being checked
 
                         for (int j = 2; j < finalI; j++) {
@@ -111,30 +115,32 @@ public class PrimeActivity extends AppCompatActivity {
                         }
                         flag = false;
                         stop = terminate;
-                        //System.out.println(stop);
                         restart = pressed;
+                        System.out.println("RESTRAT" + restart);
                         if (restart) {
+                            System.out.println("restart" + restart);
                             prime.setText("3");
                             current_number.setText("Number Being Checked: 3");
+                            current_count = 3;
+                            pressed = false;
                         }
                     }
 
                 });
                 try {
-                    Thread.sleep(700); //Makes the thread sleep or be inactive for 10 seconds
+                    Thread.sleep(1000); //Makes the thread sleep or be inactive for 10 seconds
+
+                    current_count += 2;
+
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if(restart) {
-                    i = 3;
-                    pressed = false;
-                    restart = false;
-                }
-                else {
-                    i += 2;
-                }
+
 
             }
+            current_count += 2;
+            stop = false;
 
         }
 
