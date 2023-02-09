@@ -22,6 +22,7 @@ public class PrimeActivity extends AppCompatActivity {
     private int current_prime;
     private int current_count = 3;
     private boolean pressed = false;
+    private boolean terminate_reset;
 
 
     @Override
@@ -30,22 +31,25 @@ public class PrimeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_prime);
         prime = findViewById(R.id.prime_number);
         current_number = findViewById(R.id.current_number);
-        System.out.println("creating");
+
 
         if(savedInstanceState != null) {
             current_prime = savedInstanceState.getInt("prime");
             prime.setText(String.valueOf(current_prime));
 
             current_count = savedInstanceState.getInt("count");
-            System.out.println("CURRENT COUNT" + current_count);
+
             current_number.setText(String.valueOf(current_count));
             View v = getWindow().getCurrentFocus();
             runFindPrimes(v);
+
+            terminate =  savedInstanceState.getBoolean("terminate");
+            System.out.println("TERMINATE" + terminate);
         }
     }
 
     public void terminate(View v) {
-        System.out.println("terminating");
+
         terminate = true;
 
 
@@ -63,43 +67,35 @@ public class PrimeActivity extends AppCompatActivity {
             reset = true;
         }
         else{
-            System.out.println("2");
-
+           // System.out.println("2");
             pressed = true;
             if(terminate) {
                 runnableThread primeThread = new runnableThread();
                 new Thread(primeThread).start();
                 reset = true;
             }
-
             terminate = false;
-            System.out.println("pressed" + pressed);
-            System.out.println("NOT TERMINATED");
+
         }
-
-
     }
-
 
     class runnableThread implements Runnable {
         private volatile Boolean stop = false;
         private volatile Boolean restart = false;
 
-
-
         @SuppressLint("SetTextI18n")
         @Override
         public void run() {
 
-            System.out.println("STOP" + stop);
 
             while (current_count <= INFINITY) { //start at 3 and increment forever by adding 2
                 System.out.println(pressed);
                 if(stop){
+                    terminate = true;
                     break;
                 }
                 int finalI = current_count;
-                //current_count = finalI;
+
                 textHandler.post(new Runnable() {
                     @SuppressLint("SetTextI18n")
                     @Override
@@ -121,8 +117,7 @@ public class PrimeActivity extends AppCompatActivity {
                         flag = false;
                         stop = terminate;
                         restart = pressed;
-                        System.out.println("STOP" + stop);
-                        System.out.println("RESTRAT" + restart);
+
                         if (restart) {
                             System.out.println("restart" + restart);
                             prime.setText("3");
@@ -133,10 +128,13 @@ public class PrimeActivity extends AppCompatActivity {
                     }
 
                 });
+
                 try {
                     Thread.sleep(1000); //Makes the thread sleep or be inactive for 10 seconds
+                    if(!stop) {
 
-                    current_count += 2;
+                        current_count += 2;
+                    }
 
 
                 } catch (InterruptedException e) {
@@ -145,8 +143,10 @@ public class PrimeActivity extends AppCompatActivity {
 
 
             }
-            current_count += 2;
-            stop = false;
+            if(!stop) {
+                current_count += 2;
+                stop = false;
+            }
 
         }
 
@@ -162,6 +162,7 @@ public class PrimeActivity extends AppCompatActivity {
 
         outState.putInt("prime", current_prime);
         outState.putInt("count", current_count);
+        outState.putBoolean("terminate", terminate);
     }
 
     @Override
@@ -176,12 +177,12 @@ public class PrimeActivity extends AppCompatActivity {
                 finishAffinity();
             }
         });
+
         alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
-
         });
         alert.show();
 
