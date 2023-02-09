@@ -1,12 +1,13 @@
 package edu.northeastern.NUMAD23Sp_MariahMaynard;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,10 +22,6 @@ public class PrimeActivity extends AppCompatActivity {
     private int current_prime;
     private int current_count = 3;
     private boolean pressed = false;
-
-
-
-
 
 
     @Override
@@ -50,7 +47,7 @@ public class PrimeActivity extends AppCompatActivity {
     public void terminate(View v) {
         System.out.println("terminating");
         terminate = true;
-      
+
 
 
     }
@@ -167,5 +164,26 @@ public class PrimeActivity extends AppCompatActivity {
         outState.putInt("count", current_count);
     }
 
+    @Override
+    public void onBackPressed() {
 
+        AlertDialog.Builder alert = new AlertDialog.Builder(PrimeActivity.this);
+        alert.setTitle("Exiting Prime Directive!");
+        alert.setMessage("Going back will terminate the search. Are you sure you want to go back?");
+        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finishAffinity();
+            }
+        });
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+
+        });
+        alert.show();
+
+    }
 }
