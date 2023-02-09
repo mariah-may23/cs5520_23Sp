@@ -42,8 +42,8 @@ public class PrimeActivity extends AppCompatActivity {
             current_count = savedInstanceState.getInt("count");
             System.out.println("CURRENT COUNT" + current_count);
             current_number.setText(String.valueOf(current_count));
-            runnableThread primeThread = new runnableThread();
-            new Thread(primeThread).start();
+            View v = getWindow().getCurrentFocus();
+            runFindPrimes(v);
         }
     }
 
