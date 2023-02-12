@@ -6,15 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 public class PrimeActivity extends AppCompatActivity {
     TextView prime;
     TextView current_number;
-    private Handler textHandler = new Handler();
+    private Handler textHandler;
     boolean flag = false;
     boolean terminate = false;
     boolean reset = false;
@@ -31,9 +34,12 @@ public class PrimeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_prime);
         prime = findViewById(R.id.prime_number);
         current_number = findViewById(R.id.current_number);
+        textHandler = new Handler();
 
 
         if(savedInstanceState != null) {
+            // reset the prime number that was there
+            // start counting at the same number left on
             current_prime = savedInstanceState.getInt("prime");
             prime.setText(String.valueOf(current_prime));
 
@@ -42,32 +48,25 @@ public class PrimeActivity extends AppCompatActivity {
             current_number.setText(String.valueOf(current_count));
             View v = getWindow().getCurrentFocus();
             runFindPrimes(v);
-
             terminate =  savedInstanceState.getBoolean("terminate");
-            System.out.println("TERMINATE" + terminate);
+
         }
     }
 
     public void terminate(View v) {
-
         terminate = true;
-
-
-
     }
 
-
     public void runFindPrimes(View v) {
-        //System.out.println("1");
+        // check if the count was already running
         if(!reset) {
-            System.out.println("1");
-
             runnableThread primeThread = new runnableThread();
+
             new Thread(primeThread).start();
             reset = true;
         }
+        // if the count was already running
         else{
-           // System.out.println("2");
             pressed = true;
             if(terminate) {
                 runnableThread primeThread = new runnableThread();
@@ -83,13 +82,14 @@ public class PrimeActivity extends AppCompatActivity {
         private volatile Boolean stop = false;
         private volatile Boolean restart = false;
 
+
+
         @SuppressLint("SetTextI18n")
         @Override
         public void run() {
 
 
             while (current_count <= INFINITY) { //start at 3 and increment forever by adding 2
-                System.out.println(pressed);
                 if(stop){
                     terminate = true;
                     break;
@@ -97,9 +97,11 @@ public class PrimeActivity extends AppCompatActivity {
                 int finalI = current_count;
 
                 textHandler.post(new Runnable() {
+
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void run() {
+
                         current_number.setText("Number Being Checked: " + finalI); // set the current number being checked
 
                         for (int j = 2; j < finalI; j++) {
@@ -114,12 +116,12 @@ public class PrimeActivity extends AppCompatActivity {
                             prime.setText(last_prime);
                             current_prime = finalI;
                         }
+                        // check for any changes as a result of the button being pushed
                         flag = false;
                         stop = terminate;
                         restart = pressed;
 
-                        if (restart) {
-                            System.out.println("restart" + restart);
+                        if (restart) { // if terminated was pushed, then find primes was pushed
                             prime.setText("3");
                             current_number.setText("Number Being Checked: 3");
                             current_count = 3;
@@ -132,26 +134,19 @@ public class PrimeActivity extends AppCompatActivity {
                 try {
                     Thread.sleep(1000); //Makes the thread sleep or be inactive for 10 seconds
                     if(!stop) {
-
                         current_count += 2;
                     }
-
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-
             }
             if(!stop) {
-                current_count += 2;
                 stop = false;
             }
 
         }
-
-
-
 
 
     }
@@ -167,7 +162,7 @@ public class PrimeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
+        // alert the user that they are about to leave the current count
         AlertDialog.Builder alert = new AlertDialog.Builder(PrimeActivity.this);
         alert.setTitle("Exiting Prime Directive!");
         alert.setMessage("Going back will terminate the search. Are you sure you want to go back?");
