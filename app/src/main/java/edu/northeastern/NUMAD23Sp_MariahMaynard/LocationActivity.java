@@ -41,8 +41,8 @@ public class LocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_location);
         latitude = findViewById(R.id.textView6);
         longitude = findViewById(R.id.textView8);
-        distance = findViewById(R.id.button8);
-        startLoc = new Location("startLocation");
+        distance = findViewById(R.id.textView9);
+       // startLoc = new Location("startLocation");
 
         // instance to interact with location
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -75,26 +75,25 @@ public class LocationActivity extends AppCompatActivity {
         LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                if(!starting){
+                if(!starting) {
                     starting = true;
 
-                    startLoc.setLatitude(location.getLatitude());
-                    startLoc.setLongitude(location.getLongitude());
-                    setTotalDistance(location);
+                    //startLoc.setLatitude(location.getLatitude());
+                    //startLoc.setLongitude(location.getLongitude());
+                    startLat = location.getLatitude();
+                    startLong = location.getLongitude();
                 }
-                latitude.setText(String.valueOf(location.getLatitude()));
-                longitude.setText(String.valueOf(location.getLongitude()));
+
+                    latitude.setText(String.valueOf(location.getLatitude()));
+                    longitude.setText(String.valueOf(location.getLongitude()));
+                    setTotalDistance(location);
 
             }
         };
 
         manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
 
-
-
     }
-
-
 
 
     public void resetLocation(View v) {
@@ -105,7 +104,8 @@ public class LocationActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 totalDistance = 0;
-                //distance.setText("Distance: ");
+                String dText = R.string.total_distance + "0";
+                distance.setText(dText);
 
 
 
@@ -116,16 +116,18 @@ public class LocationActivity extends AppCompatActivity {
     }
 
     public void setTotalDistance(Location location){
-        Location curLoc = new Location("currentLocation");
-        curLoc.setLongitude(location.getLongitude());
-        curLoc.setLatitude(location.getLatitude());
+        Location locationA = new Location("point A");
 
-        totalDistance = curLoc.distanceTo(startLoc); // in meters
-        totalDistance = totalDistance * 3.2804; // distance in feet
-        String distanceText = R.string.total_distance + String.valueOf(totalDistance);
+        locationA.setLatitude(startLat);
+        locationA.setLongitude(startLong);
 
-        distance.setText(distanceText);
+        Location locationB = new Location("point B");
 
+        locationB.setLatitude(location.getLatitude());
+        locationB.setLongitude(location.getLongitude());
+
+        float distance = locationA.distanceTo(locationB);
+        System.out.println(distance);
 
 
     }
