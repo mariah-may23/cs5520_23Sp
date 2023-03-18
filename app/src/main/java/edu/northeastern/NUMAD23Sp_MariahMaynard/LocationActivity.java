@@ -20,8 +20,13 @@ public class LocationActivity extends AppCompatActivity {
 
     TextView latitude;
     TextView longitude;
+    TextView distance;
 
     LocationManager manager;
+
+    private double start = 0;
+    private double current = 0;
+    double totalDistance = 0;
 
 
     @Override
@@ -30,6 +35,7 @@ public class LocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_location);
         latitude = findViewById(R.id.textView6);
         longitude = findViewById(R.id.textView8);
+        distance = findViewById(R.id.button8);
 
         // instance to interact with location
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -58,12 +64,12 @@ public class LocationActivity extends AppCompatActivity {
                 }
             });
         }
+
         LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 latitude.setText(String.valueOf(location.getLatitude()));
                 longitude.setText(String.valueOf(location.getLongitude()));
-
             }
         };
 
@@ -79,6 +85,8 @@ public class LocationActivity extends AppCompatActivity {
         popup.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                totalDistance = 0;
+
 
 
             }
