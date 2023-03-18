@@ -23,4 +23,7 @@
     <string name="terminate_search">Terminate Search</string>
     <string name="find_primes">Find Primes</string>
     <string name="pacifier_switch">Pacifier Switch</string>
+    <string name="location">Location</string>
+    <string name="primes_directive">Primes Directive</string>
+    <string name="link_collector">Link Collector</string>
 </resources>
