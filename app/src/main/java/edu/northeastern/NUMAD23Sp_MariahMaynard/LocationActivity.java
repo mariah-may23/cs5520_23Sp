@@ -37,21 +37,21 @@ public class LocationActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(LocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Please Allow US to Track Your Location");
-            builder.setMessage("This activity shows your current latitude and longitude. To work, it needs you to grant location access");
-            builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            AlertDialog.Builder popup = new AlertDialog.Builder(this);
+            popup.setTitle("Please Allow US to Track Your Location");
+            popup.setMessage("This activity shows your current latitude and longitude. To work, it needs you to grant location access");
+            popup.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     ActivityCompat.requestPermissions(LocationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
                 }
             });
-            builder.show();
+            popup.show();
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Currently Tracking Your Location");
-            builder.setMessage("You have given this activity permission to show your current latitude and longitude.");
-            builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            AlertDialog.Builder popup = new AlertDialog.Builder(this);
+            popup.setTitle("Currently Tracking Your Location");
+            popup.setMessage("You have given this activity permission to show your current latitude and longitude.");
+            popup.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     ActivityCompat.requestPermissions(LocationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
@@ -67,17 +67,25 @@ public class LocationActivity extends AppCompatActivity {
             }
         };
 
-        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,listener);
+        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
 
     }
 
-    public void resetLocation(View v){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Resetting Location");
-        builder.setMessage("This action will reset your total distance.");
-        builder.setPositiveButton("Contnue",);
-    }
 
+    public void resetLocation(View v) {
+        AlertDialog.Builder popup = new AlertDialog.Builder(this);
+        popup.setTitle("Resetting Location");
+        popup.setMessage("This action will reset your total distance.");
+        popup.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+            }
+        });
+        popup.show();
+
+    }
 }
 
 
