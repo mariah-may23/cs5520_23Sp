@@ -22,11 +22,17 @@ public class LocationActivity extends AppCompatActivity {
     TextView longitude;
     TextView distance;
 
+
     LocationManager manager;
 
-    private double start = 0;
-    private double current = 0;
+    boolean starting = false;
+
+    double startLat = 0;
+    double startLong = 0;
+    double currentLat = 0;
+    double currentLong = 0;
     double totalDistance = 0;
+    Location startLoc;
 
 
     @Override
@@ -36,6 +42,7 @@ public class LocationActivity extends AppCompatActivity {
         latitude = findViewById(R.id.textView6);
         longitude = findViewById(R.id.textView8);
         distance = findViewById(R.id.button8);
+        startLoc = new Location("startLocation");
 
         // instance to interact with location
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -68,14 +75,26 @@ public class LocationActivity extends AppCompatActivity {
         LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+                if(!starting){
+                    starting = true;
+
+                    startLoc.setLatitude(location.getLatitude());
+                    startLoc.setLongitude(location.getLongitude());
+                    setTotalDistance(location);
+                }
                 latitude.setText(String.valueOf(location.getLatitude()));
                 longitude.setText(String.valueOf(location.getLongitude()));
+
             }
         };
 
         manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
 
+
+
     }
+
+
 
 
     public void resetLocation(View v) {
@@ -86,12 +105,28 @@ public class LocationActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 totalDistance = 0;
+                //distance.setText("Distance: ");
 
 
 
             }
         });
         popup.show();
+
+    }
+
+    public void setTotalDistance(Location location){
+        Location curLoc = new Location("currentLocation");
+        curLoc.setLongitude(location.getLongitude());
+        curLoc.setLatitude(location.getLatitude());
+
+        totalDistance = curLoc.distanceTo(startLoc); // in meters
+        totalDistance = totalDistance * 3.2804; // distance in feet
+        String distanceText = R.string.total_distance + String.valueOf(totalDistance);
+
+        distance.setText(distanceText);
+
+
 
     }
 }

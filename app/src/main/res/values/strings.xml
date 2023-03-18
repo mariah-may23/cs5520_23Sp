@@ -26,4 +26,5 @@
     <string name="location">Location</string>
     <string name="primes_directive">Primes Directive</string>
     <string name="link_collector">Link Collector</string>
+    <string name="total_distance">"Total Distance: "</string>
 </resources>
