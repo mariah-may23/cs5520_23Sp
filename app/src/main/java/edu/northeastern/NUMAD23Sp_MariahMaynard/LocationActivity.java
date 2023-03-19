@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LocationActivity extends AppCompatActivity {
 
@@ -27,6 +28,8 @@ public class LocationActivity extends AppCompatActivity {
     float distanceInMeters;
     Location startLocation = null;
     float totalDistance = 0;
+    LocationListener listener;
+    LocationListener listener1;
 
     LocationManager manager;
 
@@ -41,6 +44,7 @@ public class LocationActivity extends AppCompatActivity {
     Location startLoc;
     Location atStart;
     Location atCurrent;
+    LocationActivity.runnableThread trackingThread;
 
 
     @Override
@@ -53,135 +57,185 @@ public class LocationActivity extends AppCompatActivity {
         textHandler = new Handler();
         atStart = new Location("start");
         atCurrent = new Location("current");
-       // startLoc = new Location("startLocation");
+        // startLoc = new Location("startLocation");
 
         // instance to interact with location
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //ask permission
-        if (ActivityCompat.checkSelfPermission(LocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(LocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             System.out.println("here");
-
-            AlertDialog.Builder popup = new AlertDialog.Builder(this);
-            popup.setTitle("Please Allow US to Track Your Location");
-            popup.setMessage("This activity shows your current latitude and longitude. To work, it needs you to grant location access");
-            popup.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                @SuppressLint("MissingPermission")
+            ActivityCompat.requestPermissions(LocationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+        } else {
+            listener1 = new LocationListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ActivityCompat.requestPermissions(LocationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-                    LocationListener listener = new LocationListener() {
-                        @Override
-                        public void onLocationChanged(@NonNull Location location) {
-                            if(!starting) {
-                                System.out.println("HERE2");
-                                starting = true;
-                                startLat = location.getLatitude();
-                                startLong = location.getLongitude();
-                                atStart.setLatitude(startLat);
-                                atStart.setLongitude(startLong);
-                            }
+                public void onLocationChanged(@NonNull Location location) {
+                    if (!starting) {
+                        //System.out.println("HERE2");
+                        starting = true;
+                        startLat = location.getLatitude();
+                        startLong = location.getLongitude();
+                        atStart.setLatitude(startLat);
+                        atStart.setLongitude(startLong);
+                    }
 
-                            currentLat = location.getLatitude();
-                            currentLong = location.getLongitude();
-                            atCurrent.setLatitude(currentLat);
-                            atCurrent.setLongitude(currentLong);
+                    currentLat = location.getLatitude();
+                    currentLong = location.getLongitude();
+                    atCurrent.setLatitude(currentLat);
+                    atCurrent.setLongitude(currentLong);
 
-                            float distanceInMeters = 0;
-                            if (startLocation != null) {
-                                distanceInMeters = startLocation.distanceTo(location);
-                            }
-                            totalDistance += distanceInMeters * 0.000621371f;
-                            startLocation = location;
-                            System.out.println("METERSSSS DISTANCEEEEEE" + totalDistance);
+                    float distanceInMeters = 0;
+                    if (startLocation != null) {
+                        distanceInMeters = startLocation.distanceTo(location);
+                    }
+                    totalDistance += distanceInMeters * 0.000621371f;
+                    startLocation = location;
+                    //System.out.println("METERSSSS DISTANCEEEEEE" + totalDistance);
 
-                        }
-                    };
-
-                    manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
-
-                    View v = findViewById(android.R.id.content).getRootView();
-                    runLocation(v);
                 }
-            });
-            popup.show();
+            };
+
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener1);
+
+            View v = findViewById(android.R.id.content).getRootView();
+            runLocation(v);
+        }
+    }
+
+//        if (ActivityCompat.checkSelfPermission(LocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+////            if(listener != null){
+////            manager.removeUpdates(listener);}
+//            trackingThread
+//            if(listener != null) {
+//                manager.removeUpdates(listener);
+//            }
+//            if(listener1!=null) {
+//                manager.removeUpdates(listener1);
+//            }
+//            AlertDialog.Builder popup1 = new AlertDialog.Builder(this);
+//            popup1.setTitle("Currently Tracking Your Location");
+//            popup1.setMessage("You have given this activity permission to show your current latitude and longitude.");
+//            popup1.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+//                @SuppressLint("MissingPermission")
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    ActivityCompat.requestPermissions(LocationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+//                    listener1 = new LocationListener() {
+//                        @Override
+//                        public void onLocationChanged(@NonNull Location location) {
+//                            if(!starting) {
+//                                System.out.println("HERE2");
+//                                starting = true;
+//                                startLat = location.getLatitude();
+//                                startLong = location.getLongitude();
+//                                atStart.setLatitude(startLat);
+//                                atStart.setLongitude(startLong);
+//                            }
+//
+//                            currentLat = location.getLatitude();
+//                            currentLong = location.getLongitude();
+//                            atCurrent.setLatitude(currentLat);
+//                            atCurrent.setLongitude(currentLong);
+//
+//                            float distanceInMeters = 0;
+//                            if (startLocation != null) {
+//                                totalDistance = 0;
+//                                distanceInMeters = startLocation.distanceTo(location);
+//                            }
+//                            totalDistance += distanceInMeters * 0.000621371f;
+//                            startLocation = location;
+//                            System.out.println("METERSSSS DISTANCEEEEEE" + totalDistance);
+//
+//                        }
+//                    };
+//
+//                    manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener1);
+//
+//                    View v = findViewById(android.R.id.content).getRootView();
+//                    runLocation(v);
+//                }
+//            });
+//            popup1.show();
+//        }
+//
+//
 
 
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission was granted, proceed with using location services
+                System.out.println("**************************");
+                listener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+                        if(!starting) {
+                            //System.out.println("HERE2");
+                            starting = true;
+                            startLat = location.getLatitude();
+                            startLong = location.getLongitude();
+                            atStart.setLatitude(startLat);
+                            atStart.setLongitude(startLong);
+                        }
+
+                        currentLat = location.getLatitude();
+                        currentLong = location.getLongitude();
+                        atCurrent.setLatitude(currentLat);
+                        atCurrent.setLongitude(currentLong);
+
+                        float distanceInMeters = 0;
+                        if (startLocation != null) {
+                            distanceInMeters = startLocation.distanceTo(location);
+                        }
+                        totalDistance += distanceInMeters * 0.000621371f;
+                        startLocation = location;
+                        //System.out.println("METERSSSS DISTANCEEEEEE" + totalDistance);
+
+                    }
+                };
+
+                manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+
+                View v = findViewById(android.R.id.content).getRootView();
+                runLocation(v);
             }
-        if (ActivityCompat.checkSelfPermission(LocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            AlertDialog.Builder popup1 = new AlertDialog.Builder(this);
-            popup1.setTitle("Currently Tracking Your Location");
-            popup1.setMessage("You have given this activity permission to show your current latitude and longitude.");
-            popup1.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                @SuppressLint("MissingPermission")
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ActivityCompat.requestPermissions(LocationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-                    LocationListener listener = new LocationListener() {
-                        @Override
-                        public void onLocationChanged(@NonNull Location location) {
-                            if(!starting) {
-                                System.out.println("HERE2");
-                                starting = true;
-                                startLat = location.getLatitude();
-                                startLong = location.getLongitude();
-                                atStart.setLatitude(startLat);
-                                atStart.setLongitude(startLong);
-                            }
 
-                            currentLat = location.getLatitude();
-                            currentLong = location.getLongitude();
-                            atCurrent.setLatitude(currentLat);
-                            atCurrent.setLongitude(currentLong);
 
-                            float distanceInMeters = 0;
-                            if (startLocation != null) {
-                                distanceInMeters = startLocation.distanceTo(location);
-                            }
-                            totalDistance += distanceInMeters * 0.000621371f;
-                            startLocation = location;
-                            System.out.println("METERSSSS DISTANCEEEEEE" + totalDistance);
-
-                        }
-                    };
-
-                    manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
-
-                    View v = findViewById(android.R.id.content).getRootView();
-                    runLocation(v);
-                }
-            });
-            popup1.show();
+        } else {
+                // Permission was denied, show a message or disable location functionality
+                Toast.makeText(this, "Location permission was not granted", Toast.LENGTH_SHORT).show();
+            }
         }
 
 
 
-    }
-
     public void runLocation(View v){
-        LocationActivity.runnableThread trackingThread = new LocationActivity.runnableThread();
+        trackingThread = new LocationActivity.runnableThread();
         new Thread(trackingThread).start();
     }
 
     class runnableThread implements Runnable {
         boolean isReset = false;
+        boolean interrupt = false;
         float dist;
         @SuppressLint({"SetTextI18n", "MissingPermission"})
         @Override
         public void run() {
-            System.out.println("HERE1");
+           // System.out.println("HERE1");
 
-            while (true){ //start at 3 and increment forever by adding 2
+            while (!interrupt){ //start at 3 and increment forever by adding 2
                 isReset = reset;
-                System.out.println("Restinng2" + isReset);
-                System.out.println("HERE3");
+               // System.out.println("Restinng2" + isReset);
+                //System.out.println("HERE3");
                 textHandler.post(new Runnable() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void run() {
                         if(reset) { //if the user clicked reset, set distance back to zero
-                            System.out.println("cliedk resettttttttttttt");
+                           // System.out.println("cliedk resettttttttttttt");
                             distance.setText("RESET WAS CLICKED");
                             reset = false;
                         }
@@ -217,6 +271,7 @@ public class LocationActivity extends AppCompatActivity {
                 totalDistance = 0;
                 reset = true;
                 startLocation = null;
+                //trackingThread.interrupt = true;
 
             }
         });
@@ -240,6 +295,20 @@ public class LocationActivity extends AppCompatActivity {
 //
 //
 //    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Interrupt the thread to stop its execution
+        trackingThread.interrupt = true;
+        if(listener != null) {
+            manager.removeUpdates(listener);
+        }
+        if(listener1 !=null) {
+            manager.removeUpdates(listener1);
+        }
+    }
 }
 
 
