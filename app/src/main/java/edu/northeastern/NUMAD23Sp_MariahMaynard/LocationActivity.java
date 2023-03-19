@@ -24,7 +24,9 @@ public class LocationActivity extends AppCompatActivity {
     TextView longitude;
     TextView distance;
     Handler textHandler;
-
+    float distanceInMeters;
+    Location startLocation = null;
+    float totalDistance = 0;
 
     LocationManager manager;
 
@@ -35,8 +37,10 @@ public class LocationActivity extends AppCompatActivity {
     double startLong = 0;
     double currentLat = 0;
     double currentLong = 0;
-    double totalDistance = 0;
+
     Location startLoc;
+    Location atStart;
+    Location atCurrent;
 
 
     @Override
@@ -47,6 +51,8 @@ public class LocationActivity extends AppCompatActivity {
         longitude = findViewById(R.id.textView8);
         distance = findViewById(R.id.textView9);
         textHandler = new Handler();
+        atStart = new Location("start");
+        atCurrent = new Location("current");
        // startLoc = new Location("startLocation");
 
         // instance to interact with location
@@ -84,9 +90,22 @@ public class LocationActivity extends AppCompatActivity {
                     starting = true;
                     startLat = location.getLatitude();
                     startLong = location.getLongitude();
+                    atStart.setLatitude(startLat);
+                    atStart.setLongitude(startLong);
                 }
+
                 currentLat = location.getLatitude();
                 currentLong = location.getLongitude();
+                atCurrent.setLatitude(currentLat);
+                atCurrent.setLongitude(currentLong);
+
+                float distanceInMeters = 0;
+                if (startLocation != null) {
+                    distanceInMeters = startLocation.distanceTo(location);
+                }
+                totalDistance += distanceInMeters * 0.000621371f;
+                startLocation = location;
+                System.out.println("METERSSSS DISTANCEEEEEE" + totalDistance);
 
             }
         };
@@ -106,6 +125,7 @@ public class LocationActivity extends AppCompatActivity {
 
     class runnableThread implements Runnable {
         boolean isReset = false;
+        float dist;
         @SuppressLint({"SetTextI18n", "MissingPermission"})
         @Override
         public void run() {
@@ -119,15 +139,15 @@ public class LocationActivity extends AppCompatActivity {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void run() {
-                        if(isReset) { //if the user clicked reset, set distance back to zero
+                        if(reset) { //if the user clicked reset, set distance back to zero
                             System.out.println("cliedk resettttttttttttt");
                             distance.setText("RESET WAS CLICKED");
-                            isReset = false;
                             reset = false;
                         }
 
-                        latitude.setText(String.valueOf(currentLat));
+                        distance.setText("Distance: " + totalDistance);
 
+                        latitude.setText(String.valueOf(currentLat));
                         longitude.setText(String.valueOf(currentLong));
                     }
                 });
@@ -155,7 +175,7 @@ public class LocationActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 totalDistance = 0;
                 reset = true;
-                System.out.println("resting1" + reset);
+                startLocation = null;
 
             }
         });
@@ -163,22 +183,7 @@ public class LocationActivity extends AppCompatActivity {
 
     }
 
-    public void calculateDistance(Location location){
-        Location locationA = new Location("point A");
 
-        locationA.setLatitude(startLat);
-        locationA.setLongitude(startLong);
-
-        Location locationB = new Location("point B");
-
-        locationB.setLatitude(location.getLatitude());
-        locationB.setLongitude(location.getLongitude());
-
-        float distance = locationA.distanceTo(locationB);
-        System.out.println(distance);
-
-
-    }
 }
 
 
