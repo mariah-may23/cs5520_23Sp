@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,11 +23,13 @@ public class LocationActivity extends AppCompatActivity {
     TextView latitude;
     TextView longitude;
     TextView distance;
+    Handler textHandler;
 
 
     LocationManager manager;
 
     boolean starting = false;
+    boolean reset = false;
 
     double startLat = 0;
     double startLong = 0;
@@ -42,6 +46,7 @@ public class LocationActivity extends AppCompatActivity {
         latitude = findViewById(R.id.textView6);
         longitude = findViewById(R.id.textView8);
         distance = findViewById(R.id.textView9);
+        textHandler = new Handler();
        // startLoc = new Location("startLocation");
 
         // instance to interact with location
@@ -71,29 +76,74 @@ public class LocationActivity extends AppCompatActivity {
                 }
             });
         }
-
         LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 if(!starting) {
+                    System.out.println("HERE2");
                     starting = true;
-
-                    //startLoc.setLatitude(location.getLatitude());
-                    //startLoc.setLongitude(location.getLongitude());
                     startLat = location.getLatitude();
                     startLong = location.getLongitude();
                 }
-
-                    latitude.setText(String.valueOf(location.getLatitude()));
-                    longitude.setText(String.valueOf(location.getLongitude()));
-                    setTotalDistance(location);
+                currentLat = location.getLatitude();
+                currentLong = location.getLongitude();
 
             }
         };
 
         manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
 
+        View v = findViewById(android.R.id.content).getRootView();
+        this.runLocation(v);
+
+
     }
+
+    public void runLocation(View v){
+        LocationActivity.runnableThread trackingThread = new LocationActivity.runnableThread();
+        new Thread(trackingThread).start();
+    }
+
+    class runnableThread implements Runnable {
+        boolean isReset = false;
+        @SuppressLint({"SetTextI18n", "MissingPermission"})
+        @Override
+        public void run() {
+            System.out.println("HERE1");
+
+            while (true){ //start at 3 and increment forever by adding 2
+                isReset = reset;
+                System.out.println("Restinng2" + isReset);
+                System.out.println("HERE3");
+                textHandler.post(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if(isReset) { //if the user clicked reset, set distance back to zero
+                            System.out.println("cliedk resettttttttttttt");
+                            distance.setText("RESET WAS CLICKED");
+                            isReset = false;
+                            reset = false;
+                        }
+
+                        latitude.setText(String.valueOf(currentLat));
+
+                        longitude.setText(String.valueOf(currentLong));
+                    }
+                });
+                try {
+                    Thread.sleep(1000); //Makes the thread sleep or be inactive for 1 seconds
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+
+
+    }
+
 
 
     public void resetLocation(View v) {
@@ -104,10 +154,8 @@ public class LocationActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 totalDistance = 0;
-                String dText = R.string.total_distance + "0";
-                distance.setText(dText);
-
-
+                reset = true;
+                System.out.println("resting1" + reset);
 
             }
         });
@@ -115,7 +163,7 @@ public class LocationActivity extends AppCompatActivity {
 
     }
 
-    public void setTotalDistance(Location location){
+    public void calculateDistance(Location location){
         Location locationA = new Location("point A");
 
         locationA.setLatitude(startLat);
