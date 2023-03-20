@@ -5,8 +5,10 @@
     android:id="@+id/latitude"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1E181E"
     android:onClick="resetLocation"
     tools:context=".LocationActivity">
+
 
     <TextView
         android:id="@+id/textView11"
@@ -14,8 +16,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="LONGITUDE"
-        android:textColor="#000000"
+
         app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="#FFCAFD"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -25,6 +28,7 @@
         android:layout_height="wrap_content"
         android:text="0"
         android:textSize="24sp"
+        android:textColor="#FFCAFD"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +41,7 @@
         android:layout_height="wrap_content"
         android:text="0"
         android:textSize="24sp"
+        android:textColor="#FFCAFD"
         app:layout_constraintBottom_toTopOf="@+id/button8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -50,6 +55,7 @@
         android:layout_height="wrap_content"
         android:text="0"
         android:textSize="24sp"
+        android:textColor="#FFCAFD"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -63,6 +69,8 @@
         android:layout_height="wrap_content"
         android:onClick="resetLocation"
         android:text="RESET"
+        android:backgroundTint="#FFFFFF"
+        android:textColor="#882885"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
@@ -75,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TOTAL DISTANCE (mi)"
-        android:textColor="#020000"
+        android:textColor="#FFCAFD"
         android:textColorHint="#020000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/textView9"
@@ -90,7 +98,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:text="LATITUDE"
-        android:textColor="#000000"
+        android:textColor="#FFCAFD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
