@@ -68,6 +68,8 @@ public class LocationActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(LocationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
         } else {
             totalDistance = 0;
+            reset = true;
+            startLocation = null;
             listener1 = new LocationListener() {
                 @Override
                 public void onLocationChanged(@NonNull Location location) {
@@ -171,6 +173,7 @@ public class LocationActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 totalDistance = 0;
                 reset = true;
+                startLocation = null;
                 // Permission was granted, proceed with using location services
                 System.out.println("**************************");
                 listener = new LocationListener() {
@@ -316,6 +319,23 @@ public class LocationActivity extends AppCompatActivity {
             manager.removeUpdates(listener1);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Are you sure?");
+        builder.setMessage("Your distance will be lost if you go back. Proceed?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Call super method to exit activity
+                LocationActivity.super.onBackPressed();
+            }
+        });
+        builder.setNegativeButton("Go Back", null);
+        builder.show();
+    }
+
 }
 
 
