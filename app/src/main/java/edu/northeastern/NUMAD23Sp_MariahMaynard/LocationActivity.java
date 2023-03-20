@@ -250,7 +250,7 @@ public class LocationActivity extends AppCompatActivity {
                             reset = false;
                         }
 
-                        distance.setText("Distance: " + totalDistance);
+                        distance.setText(String.valueOf(totalDistance));
 
                         latitude.setText(String.valueOf(currentLat));
                         longitude.setText(String.valueOf(currentLong));
