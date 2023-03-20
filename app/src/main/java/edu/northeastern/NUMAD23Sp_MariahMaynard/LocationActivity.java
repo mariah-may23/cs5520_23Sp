@@ -318,6 +318,7 @@ public class LocationActivity extends AppCompatActivity {
         if(listener1 !=null) {
             manager.removeUpdates(listener1);
         }
+        starting = false;
     }
 
     @Override
