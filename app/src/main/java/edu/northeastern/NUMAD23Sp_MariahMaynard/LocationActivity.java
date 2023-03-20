@@ -63,9 +63,11 @@ public class LocationActivity extends AppCompatActivity {
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //ask permission
         if (ActivityCompat.checkSelfPermission(LocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //totalDistance = 0;
             System.out.println("here");
             ActivityCompat.requestPermissions(LocationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
         } else {
+            totalDistance = 0;
             listener1 = new LocationListener() {
                 @Override
                 public void onLocationChanged(@NonNull Location location) {
@@ -167,6 +169,8 @@ public class LocationActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                totalDistance = 0;
+                reset = true;
                 // Permission was granted, proceed with using location services
                 System.out.println("**************************");
                 listener = new LocationListener() {
@@ -206,7 +210,10 @@ public class LocationActivity extends AppCompatActivity {
 
         } else {
                 // Permission was denied, show a message or disable location functionality
-                Toast.makeText(this, "Location permission was not granted", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Location permission was not granted", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder popup1 = new AlertDialog.Builder(this);
+            popup1.setTitle("Need Your Location");
+            popup1.setMessage("You have not given this activity permission to show your current latitude and longitude. Please go to settings to allow access.");
             }
         }
 
